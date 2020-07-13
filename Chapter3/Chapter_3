@@ -1,0 +1,80 @@
+Chapter 3 Getting started with neural networks
+
+3.1 Anatomy of a neural network
+
+training a neural network revolves around the following objects:
+
+1) Layers,  which are combined into a network(or model)
+2) input data & targets
+3) loss function, defines the feedback signal for learning 
+4) optimizer, determines  how learning proceeds
+
+ 
+3.1.1 Layers
+
+Def: A layer is a data-processing module that takes as input one or more tensors and that outputs one or more tensors;
+
+Layers usually have a state: the layers' weights: one or several tensors learned with SGD, which contain the network's knowledge
+
+Different layers for different tensor formats and different types of data processing:
+1) vector data(2D tensors) --- densely connected / fully connected / dense layers
+2) sequence data(3D tensors)  ---  recurrent layers (e.g. LSTM )
+3) image data(4D tensors) --- 2D convolution layers(Conv2D)
+
+layer compatibility: layers only accept input tensors of a certain shape and return a tensor of certain shape
+
+3.1.2 Models: networks of layers
+
+A deep-learning model is a directed, acyclic graph of layers (有向无环图)
+e.g. linar stack of layers, mapping a single input to a single output
+
+Other network topologies:
+1) Two-branch networks
+2) Multihead networks
+3) Inception blocks
+
+The topology of a network defines a *hypothesis space* : by choosing a network topology,  you constrain your *space of possibilities*(hypothesis space) to a specific series of tensor operations, then you will search for a good set of values for the weights of tensors involved in these tensor operations
+
+
+3.1.3 Loss functions and optimizers
+
+Once network architecture is defined, we still have two things to chooose:
+1) Loss function(objective function)  --- quantity to be minimized during training 
+2) Optimizer --- how the network will be updated (generally variant of SGD)
+
+A neural network that has multiple outputs may have multiple loss functions(one per output)
+But the gradient-descent process must be based on a *single* scalar loss value, thus all losses are combined (via averaging) into a single scalar quantity
+
+Choose the right objective function is extremely important!! The network will take any shortcut it can to minimize the loss, will may produce some results unintended 
+
+For common problems, there are simple guidelines for loss functions:
+1) two-class classification problem:  binary crossentropy (二元交叉熵)
+2) many-class classification problem:  categorical crossentropy （分类交叉熵）
+3) regression problem ---  mean-squared error（均方误差）
+4) sequence-learning problem  ---  connectionist temporal classificaiton (CTC, 联结主义时序分类) 
+
+
+3.2 Introduction to Keras
+  
+a model-level library, providing high-level building blocks for developing deep-learning models
+
+It doesn't handle low-level operations(e.g. tensor manipulations, differentiation),  instead it relies on a specialized, well-optimized tensor library to do so --- serving as the *backend engine* (后端引擎) of Keras
+
+currently three backend engine: TensorFlow, Theano, Microsoft Cognitive Toolkit(CNTK)
+
+TensorFlow ---On CPU, it wraps a library called 'Eigen'
+           ---On GPU, it wraps 'NVIDIA CUDA Deep Neural Network library' (cuDNN)
+
+
+3.2.2 Developing with Keras: a quick overview
+
+General workflow:
+1) Define the training data: input tensors and target tensors
+2) Define a network of layers(model) that maps inputs to targets
+3) Configure the learning process: choose loss function, optimizer and metrics to monitor
+4) Iterate on the training data by calling the fit() method of the model
+
+Two ways to define a model: 
+1) Sequential class; 
+2) functional API
+
